@@ -1,0 +1,1315 @@
+openapi: 3.0.0
+info:
+  title: Hospital Management API
+  description: API for managing hospital information, doctors, departments, tests, and user interactions
+  version: 1.0.0
+servers:
+  - url: https://api.hospital-management.com/v1
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - location
+              properties:
+                name:
+                  type: string
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  example: "john@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "SecurePass123!"
+                location:
+                  type: string
+                  example: "Dhaka"
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Registration successful. Please verify your email."
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "EMAIL_ALREADY_EXISTS"
+                      message:
+                        type: string
+                        example: "An account with this email already exists."
+
+  /auth/verify-otp:
+    post:
+      summary: Verify OTP sent to user's email
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - otp
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "john@example.com"
+                otp:
+                  type: string
+                  example: "123456"
+      responses:
+        '200':
+          description: OTP verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "OTP verified successfully."
+        '400':
+          description: Invalid OTP
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "INVALID_OTP"
+                      message:
+                        type: string
+                        example: "OTP is incorrect or has expired."
+
+  /auth/login:
+    post:
+      summary: Log a user into the platform
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "john@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "SecurePass123!"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5..."
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "INVALID_CREDENTIALS"
+                      message:
+                        type: string
+                        example: "Email or password is incorrect."
+
+  /hospitals:
+    get:
+      summary: Search or filter hospitals
+      tags:
+        - Hospitals
+      parameters:
+        - name: location
+          in: query
+          schema:
+            type: string
+          example: "Dhaka"
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [public, private]
+          example: "public"
+        - name: min_rating
+          in: query
+          schema:
+            type: number
+            format: float
+          example: 4
+        - name: query
+          in: query
+          schema:
+            type: string
+          example: "heart"
+        - name: doctor_name
+          in: query
+          schema:
+            type: string
+          example: "Ali"
+        - name: department_name
+          in: query
+          schema:
+            type: string
+          example: "Cardiology"
+        - name: test_name
+          in: query
+          schema:
+            type: string
+          example: "X-ray"
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [rating, name]
+          example: "rating"
+      responses:
+        '200':
+          description: Successfully retrieved hospitals
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: "Heart Care Hospital"
+                        address:
+                          type: string
+                          example: "123 Road, Dhaka"
+                        phone_number:
+                          type: string
+                          example: "01700000000"
+                        rating:
+                          type: number
+                          format: float
+                          example: 4.7
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "SERVER_ERROR"
+                      message:
+                        type: string
+                        example: "An unexpected error occurred during hospital search."
+
+  /hospitals/{id}:
+    get:
+      summary: Fetch full hospital details
+      tags:
+        - Hospitals
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Successfully retrieved hospital details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: "Heart Care Hospital"
+                      address:
+                        type: string
+                        example: "123 Road, Dhaka"
+                      phone_number:
+                        type: string
+                        example: "01700000000"
+                      website:
+                        type: string
+                        example: "https://heartcare.com"
+                      location:
+                        type: string
+                        example: "Dhaka"
+                      type:
+                        type: string
+                        example: "public"
+                      icus:
+                        type: integer
+                        example: 20
+        '404':
+          description: Hospital not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "HOSPITAL_NOT_FOUND"
+                      message:
+                        type: string
+                        example: "No hospital found with the given ID."
+
+  /doctors/{id}:
+    get:
+      summary: Get full doctor details
+      tags:
+        - Doctors
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 101
+      responses:
+        '200':
+          description: Successfully retrieved doctor details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 101
+                      name:
+                        type: string
+                        example: "Dr. Ali Hossain"
+                      specialty:
+                        type: string
+                        example: "Cardiology"
+                      phone_number:
+                        type: string
+                        example: "01800000000"
+                      email:
+                        type: string
+                        example: "ali@care.com"
+                      location:
+                        type: string
+                        example: "Dhaka"
+                      department:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                          name:
+                            type: string
+                            example: "Cardiology"
+        '404':
+          description: Doctor not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "DOCTOR_NOT_FOUND"
+                      message:
+                        type: string
+                        example: "Doctor not found with the provided ID."
+
+  /doctors/{id}/hospitals:
+    get:
+      summary: Get hospitals a doctor works at
+      tags:
+        - Doctors
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 101
+      responses:
+        '200':
+          description: Successfully retrieved hospitals for doctor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: "Heart Care Hospital"
+                        address:
+                          type: string
+                          example: "123 Road, Dhaka"
+                        phone_number:
+                          type: string
+                          example: "01700000000"
+
+  /hospitals/{id}/doctors:
+    get:
+      summary: List of doctors in a hospital
+      tags:
+        - Hospitals
+        - Doctors
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Successfully retrieved doctors in hospital
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 101
+                        name:
+                          type: string
+                          example: "Dr. Ali Hossain"
+                        specialty:
+                          type: string
+                          example: "Cardiology"
+                        phone_number:
+                          type: string
+                          example: "01800000000"
+
+  /hospitals/{id}/tests:
+    get:
+      summary: Diagnostic tests available at a hospital
+      tags:
+        - Hospitals
+        - Tests
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Successfully retrieved tests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 8
+                        name:
+                          type: string
+                          example: "X-Ray"
+                        description:
+                          type: string
+                          example: "Chest X-ray"
+                        cost:
+                          type: number
+                          example: 300
+                        availability:
+                          type: string
+                          enum: [available, not available]
+                          example: "available"
+
+  /hospitals/{id}/departments:
+    get:
+      summary: Departments in a hospital
+      tags:
+        - Hospitals
+        - Departments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Successfully retrieved departments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 3
+                        name:
+                          type: string
+                          example: "Cardiology"
+                        description:
+                          type: string
+                          example: "Heart and blood vessels"
+                        head_doctor_name:
+                          type: string
+                          example: "Dr. Ali Hossain"
+                        contact_number:
+                          type: string
+                          example: "01800000000"
+                        beds:
+                          type: integer
+                          example: 10
+                        available_days:
+                          type: array
+                          items:
+                            type: string
+                          example: ["Monday", "Wednesday", "Friday"]
+
+  /hospitals/{id}/ratings:
+    get:
+      summary: Fetch all reviews for a hospital
+      tags:
+        - Hospitals
+        - Ratings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Successfully retrieved ratings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 12
+                        user_name:
+                          type: string
+                          example: "John Doe"
+                        rating:
+                          type: integer
+                          minimum: 1
+                          maximum: 5
+                          example: 5
+                        review_text:
+                          type: string
+                          example: "Excellent care!"
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2025-05-01T10:00:00Z"
+    post:
+      summary: Submit a new rating and review
+      tags:
+        - Hospitals
+        - Ratings
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - rating
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  example: 4
+                review_text:
+                  type: string
+                  example: "Helpful staff and clean facility."
+      responses:
+        '201':
+          description: Rating submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Rating submitted successfully."
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "VALIDATION_ERROR"
+                      message:
+                        type: string
+                        example: "Rating must be between 1 and the5."
+
+  /ratings/{id}:
+    put:
+      summary: Update an existing review
+      tags:
+        - Ratings
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 12
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  example: 3
+                review_text:
+                  type: string
+                  example: "Updated after second visit."
+      responses:
+        '200':
+          description: Rating updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Rating updated successfully."
+        '403':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "NOT_AUTHORIZED"
+                      message:
+                        type: string
+                        example: "You are not allowed to update this review."
+    delete:
+      summary: Delete a user's own review
+      tags:
+        - Ratings
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 12
+      responses:
+        '200':
+          description: Rating deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Rating deleted successfully."
+
+  /hospital-admin/login:
+    post:
+      summary: Admin login
+      tags:
+        - Hospital Admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "admin@heartcare.com"
+                password:
+                  type: string
+                  format: password
+                  example: "AdminPass123!"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  token:
+                    type: string
+                    example: "admin.jwt.token"
+
+  /hospital-admin/hospitals/{id}:
+    put:
+      summary: Update hospital details
+      tags:
+        - Hospital Admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Updated Name"
+                address:
+                  type: string
+                  example: "New Location"
+                phone_number:
+                  type: string
+                  example: "01911111111"
+                website:
+                  type: string
+                  example: "https://updated.com"
+                location:
+                  type: string
+                  example: "Dhaka"
+                type:
+                  type: string
+                  enum: [public, private]
+                  example: "private"
+                icus:
+                  type: integer
+                  example: 30
+      responses:
+        '200':
+          description: Hospital information updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Hospital information updated."
+
+  /hospital-admin/hospitals/{id}/doctors:
+    post:
+      summary: Add existing doctor to hospital
+      tags:
+        - Hospital Admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - doctor_id
+              properties:
+                doctor_id:
+                  type: integer
+                  example: 102
+                appointment_time:
+                  type: string
+                  format: date-time
+                  example: "2025-05-10T12:00:00Z"
+                weekly_schedule:
+                  type: array
+                  items:
+                    type: string
+                  example: ["Monday", "Wednesday"]
+                appointment_fee:
+                  type: number
+                  example: 500
+      responses:
+        '201':
+          description: Doctor added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Doctor added to hospital."
+
+  /hospital-admin/hospitals/{id}/doctors/request:
+    post:
+      summary: Request to add a new doctor
+      tags:
+        - Hospital Admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - specialty
+                - phone_number
+                - email
+              properties:
+                name:
+                  type: string
+                  example: "Dr. Farzana Rahman"
+                specialty:
+                  type: string
+                  example: "Neurology"
+                phone_number:
+                  type: string
+                  example: "01700000001"
+                email:
+                  type: string
+                  format: email
+                  example: "farzana@neuro.com"
+                location:
+                  type: string
+                  example: "Chittagong"
+      responses:
+        '202':
+          description: Doctor request submitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Doctor request submitted for approval."
+
+  /hospital-admin/hospitals/{id}/tests:
+    post:
+      summary: Add existing test to hospital
+      tags:
+        - Hospital Admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - test_id
+              properties:
+                test_id:
+                  type: integer
+                  example: 4
+                cost:
+                  type: number
+                  example: 350
+                availability:
+                  type: string
+                  enum: [available, not available]
+                  example: "available"
+      responses:
+        '201':
+          description: Test added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Test added to hospital successfully."
+
+  /hospital-admin/hospitals/{id}/tests/request:
+    post:
+      summary: Request to add new test
+      tags:
+        - Hospital Admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - description
+              properties:
+                name:
+                  type: string
+                  example: "MRI Scan"
+                description:
+                  type: string
+                  example: "Brain and spinal imaging"
+      responses:
+        '202':
+          description: Test request submitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Test request submitted for approval."
+
+  /hospital-admin/hospitals/{id}/tests/{test_id}:
+    put:
+      summary: Update test availability or cost
+      tags:
+        - Hospital Admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: test_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 8
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cost:
+                  type: number
+                  example: 400
+                availability:
+                  type: string
+                  enum: [available, not available]
+                  example: "not available"
+      responses:
+        '200':
+          description: Test information updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Test information updated successfully."
+
+  /hospital-admin/hospitals/{id}/departments:
+    post:
+      summary: Add existing department to hospital
+      tags:
+        - Hospital Admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - department_id
+              properties:
+                department_id:
+                  type: integer
+                  example: 2
+                head_doctor_id:
+                  type: integer
+                  example: 102
+                contact_number:
+                  type: string
+                  example: "01922222222"
+                beds:
+                  type: integer
+                  example: 15
+                available_days:
+                  type: array
+                  items:
+                    type: string
+                  example: ["Sunday", "Tuesday"]
+      responses:
+        '201':
+          description: Department added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Department added to hospital successfully."
+
+  /hospital-admin/hospitals/{id}/departments/request:
+    post:
+      summary: Request to add a new department
+      tags:
+        - Hospital Admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - description
+              properties:
+                name:
+                  type: string
+                  example: "Endocrinology"
+                description:
+                  type: string
+                  example: "Hormonal disorders"
+      responses:
+        '202':
+          description: Department request submitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Department request submitted for approval."
+
+  /hospital-admin/hospitals/{id}/departments/{dept_id}/head:
+    put:
+      summary: Update department head
+      tags:
+        - Hospital Admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: dept_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - head_doctor_id
+              properties:
+                head_doctor_id:
+                  type: integer
+                  example: 110
+      responses:
+        '200':
+          description: Department head updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Department head updated successfully."
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
