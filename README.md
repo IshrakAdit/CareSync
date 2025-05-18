@@ -42,14 +42,16 @@ CareSync is built in collaboration with [**Helping Hand For Needy**](https://hhf
 
 ### Backend
 
-- Java + Spring Boot (Microservices)
-- PostgreSQL (Database)
-- Docker & Kubernetes (Containerization & Orchestration)
+- Java 21
+- Spring Boot (3.4.5)
+
+### Database
+
+- PostgreSQL (16.8)
 
 ### Frontend
 
-- React.js (User Interface)
-- Axios, React Router, Context API
+- ReactJS (User Interface)
 
 ### DevOps & Cloud
 
@@ -71,36 +73,20 @@ The system supports a normalized relational schema for managing users, hospital 
 ### Prerequisites
 
 - Docker
-- Kubernetes (Cloud)
-- Node.js and npm
-- Java 21 and Maven
 
 ### Steps
 
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-org/caresync.git
-   cd caresync
+   git clone https://github.com/Ishrak-Adit07/CareSync.git
+   cd CareSync
    ```
 
 2. **Start Development Environment**:
 
    ```bash
    docker-compose up --build
-   ```
-
-3. **Deploy to Kubernetes**:
-
-   ```bash
-   kubectl apply -f k8s/
-   ```
-
-4. **Run Frontend**:
-   ```bash
-   cd client
-   npm install
-   npm run dev
    ```
 
 ---
@@ -139,4 +125,4 @@ This project is licensed under the MIT License.
 
 ## External Resources
 
-- Helping Hand For Needy — [**Helping Hand For Needy**](https://hhfn.org.bd)
+- Collaborator Organization — [**Helping Hand For Needy**](https://hhfn.org.bd)
