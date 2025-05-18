@@ -1,0 +1,3 @@
+[submodule "services/auth"]
+	path = services/auth
+	url = https://github.com/Ishrak-Adit07/caresync-auth-service.git
