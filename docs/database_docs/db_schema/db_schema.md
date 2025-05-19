@@ -1,117 +1,139 @@
-# CareSync Database Schema
+### user_Locations
 
-## Users
+| Column      | Data Type                                             |
+| ----------- | ----------------------------------------------------- |
+| id          | SERIAL PRIMARY KEY                                    |
+| user_id     | INTEGER UNIQUE REFERENCES users(id) ON DELETE CASCADE |
+| address     | TEXT                                                  |
+| thana       | VARCHAR(100)                                          |
+| po          | VARCHAR(100)                                          |
+| city        | VARCHAR(100)                                          |
+| postal_code | VARCHAR(20)                                           |
 
-| Column        | Data Type    | Constraints      |
-| ------------- | ------------ | ---------------- |
-| id            | SERIAL       | PRIMARY KEY      |
-| name          | VARCHAR(100) |                  |
-| email         | VARCHAR(100) | UNIQUE, NOT NULL |
-| password_hash | VARCHAR(255) | NOT NULL         |
-| location      | VARCHAR(100) |                  |
+### hospital_Locations
 
-## Hospitals
+| Column      | Data Type                                                 |
+| ----------- | --------------------------------------------------------- |
+| id          | SERIAL PRIMARY KEY                                        |
+| hospital_id | INTEGER UNIQUE REFERENCES hospitals(id) ON DELETE CASCADE |
+| address     | TEXT                                                      |
+| thana       | VARCHAR(100)                                              |
+| po          | VARCHAR(100)                                              |
+| city        | VARCHAR(100)                                              |
+| postal_code | VARCHAR(20)                                               |
 
-| Column       | Data Type    | Constraints |
-| ------------ | ------------ | ----------- |
-| id           | SERIAL       | PRIMARY KEY |
-| name         | VARCHAR(150) |             |
-| address      | TEXT         |             |
-| phone_number | VARCHAR(20)  |             |
-| website      | VARCHAR(255) |             |
-| location     | VARCHAR(100) |             |
-| type         | VARCHAR(50)  |             |
-| icus         | INTEGER      |             |
+### doctor_Locations
 
-## Ratings
+| Column      | Data Type                                               |
+| ----------- | ------------------------------------------------------- |
+| id          | SERIAL PRIMARY KEY                                      |
+| doctor_id   | INTEGER UNIQUE REFERENCES doctors(id) ON DELETE CASCADE |
+| address     | TEXT                                                    |
+| thana       | VARCHAR(100)                                            |
+| po          | VARCHAR(100)                                            |
+| city        | VARCHAR(100)                                            |
+| postal_code | VARCHAR(20)                                             |
 
-| Column      | Data Type | Constraints                                |
-| ----------- | --------- | ------------------------------------------ |
-| id          | SERIAL    | PRIMARY KEY                                |
-| user_id     | INTEGER   | REFERENCES Users(id) ON DELETE CASCADE     |
-| hospital_id | INTEGER   | REFERENCES Hospitals(id) ON DELETE CASCADE |
-| rating      | INTEGER   | CHECK (rating BETWEEN 1 AND 5)             |
-| review_text | TEXT      |                                            |
-| created_at  | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP                  |
-| updated_at  | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP                  |
+### users
 
-## Departments
+| Column        | Data Type                                                       |
+| ------------- | --------------------------------------------------------------- |
+| id            | SERIAL PRIMARY KEY                                              |
+| name          | VARCHAR(100)                                                    |
+| email         | VARCHAR(100) UNIQUE NOT NULL                                    |
+| password_hash | VARCHAR(255) NOT NULL                                           |
+| location_id   | INTEGER UNIQUE REFERENCES user_Locations(id) ON DELETE SET NULL |
 
-| Column      | Data Type    | Constraints |
-| ----------- | ------------ | ----------- |
-| id          | SERIAL       | PRIMARY KEY |
-| name        | VARCHAR(100) |             |
-| description | TEXT         |             |
+### hospitals
 
-## Doctors
+| Column       | Data Type                                                           |
+| ------------ | ------------------------------------------------------------------- |
+| id           | SERIAL PRIMARY KEY                                                  |
+| name         | VARCHAR(150) NOT NULL                                               |
+| phone_number | VARCHAR(20)                                                         |
+| website      | VARCHAR(255)                                                        |
+| location_id  | INTEGER UNIQUE REFERENCES hospital_Locations(id) ON DELETE SET NULL |
+| types        | hospital_type_enum[] NOT NULL                                       |
+| icus         | SMALLINT                                                            |
 
-| Column        | Data Type    | Constraints                |
-| ------------- | ------------ | -------------------------- |
-| id            | SERIAL       | PRIMARY KEY                |
-| name          | VARCHAR(100) |                            |
-| specialty     | VARCHAR(100) |                            |
-| phone_number  | VARCHAR(20)  |                            |
-| email         | VARCHAR(100) |                            |
-| location      | VARCHAR(100) |                            |
-| department_id | INTEGER      | REFERENCES Departments(id) |
+### ratings
 
-## Doctor_Hospital
+| Column      | Data Type                                          |
+| ----------- | -------------------------------------------------- |
+| id          | SERIAL PRIMARY KEY                                 |
+| user_id     | INTEGER REFERENCES Users(id) ON DELETE CASCADE     |
+| hospital_id | INTEGER REFERENCES Hospitals(id) ON DELETE CASCADE |
+| rating      | SMALLINT CHECK (rating BETWEEN 1 AND 5)            |
+| review_text | TEXT                                               |
+| created_at  | TIMESTAMP DEFAULT CURRENT_TIMESTAMP                |
+| updated_at  | TIMESTAMP DEFAULT CURRENT_TIMESTAMP                |
 
-| Column           | Data Type     | Constraints              |
-| ---------------- | ------------- | ------------------------ |
-| id               | SERIAL        | PRIMARY KEY              |
-| doctor_id        | INTEGER       | REFERENCES Doctors(id)   |
-| hospital_id      | INTEGER       | REFERENCES Hospitals(id) |
-| appointment_time | TIMESTAMP     |                          |
-| weekly_schedule  | TEXT          |                          |
-| appointment_fee  | DECIMAL(10,2) |                          |
+### departments
 
-## Diagnostic_Tests
+| Column      | Data Type             |
+| ----------- | --------------------- |
+| id          | SERIAL PRIMARY KEY    |
+| name        | VARCHAR(100) NOT NULL |
+| description | TEXT                  |
 
-| Column      | Data Type    | Constraints |
-| ----------- | ------------ | ----------- |
-| id          | SERIAL       | PRIMARY KEY |
-| name        | VARCHAR(100) |             |
-| description | TEXT         |             |
+### doctors
 
-## Hospital_Diagnostic_Tests
+| Column        | Data Type                                                         |
+| ------------- | ----------------------------------------------------------------- |
+| id            | SERIAL PRIMARY KEY                                                |
+| name          | VARCHAR(100) NOT NULL                                             |
+| specialties   | TEXT[] NOT NULL                                                   |
+| phone_number  | VARCHAR(20)                                                       |
+| email         | VARCHAR(100)                                                      |
+| location_id   | INTEGER UNIQUE REFERENCES Doctor_Locations(id) ON DELETE SET NULL |
+| department_id | INTEGER REFERENCES Departments(id)                                |
 
-| Column       | Data Type     | Constraints                     |
-| ------------ | ------------- | ------------------------------- |
-| id           | SERIAL        | PRIMARY KEY                     |
-| hospital_id  | INTEGER       | REFERENCES Hospitals(id)        |
-| test_id      | INTEGER       | REFERENCES Diagnostic_Tests(id) |
-| cost         | DECIMAL(10,2) |                                 |
-| availability | VARCHAR(50)   |                                 |
+### doctor_Hospital
 
-## Hospital_Departments
+| Column            | Data Type                                          |
+| ----------------- | -------------------------------------------------- |
+| id                | SERIAL PRIMARY KEY                                 |
+| doctor_id         | INTEGER REFERENCES Doctors(id) ON DELETE CASCADE   |
+| hospital_id       | INTEGER REFERENCES Hospitals(id) ON DELETE CASCADE |
+| appointment_times | TIMESTAMP[]                                        |
+| weekly_schedule   | TEXT[]                                             |
+| appointment_fee   | NUMERIC(10, 2)                                     |
 
-| Column         | Data Type   | Constraints                |
-| -------------- | ----------- | -------------------------- |
-| id             | SERIAL      | PRIMARY KEY                |
-| hospital_id    | INTEGER     | REFERENCES Hospitals(id)   |
-| department_id  | INTEGER     | REFERENCES Departments(id) |
-| head_doctor_id | INTEGER     | REFERENCES Doctors(id)     |
-| contact_number | VARCHAR(20) |                            |
-| beds           | INTEGER     |                            |
-| available_days | TEXT        |                            |
+### diagnostic_Tests
 
-## User_Appointment
+| Column      | Data Type             |
+| ----------- | --------------------- |
+| id          | SERIAL PRIMARY KEY    |
+| name        | VARCHAR(100) NOT NULL |
+| description | TEXT                  |
 
-| Column             | Data Type   | Constraints                                            |
-| ------------------ | ----------- | ------------------------------------------------------ |
-| id                 | SERIAL      | PRIMARY KEY                                            |
-| user_id            | INTEGER     | REFERENCES Users(id)                                   |
-| doctor_hospital_id | INTEGER     | REFERENCES Doctor_Hospital(id)                         |
-| appointment_time   | TIMESTAMP   |                                                        |
-| status             | VARCHAR(20) | CHECK (status IN ('booked', 'cancelled', 'completed')) |
-| created_at         | TIMESTAMP   | DEFAULT CURRENT_TIMESTAMP                              |
+### hospital_diagnostic_tests
 
-## Hospital_Admin
+| Column       | Data Type                                                 |
+| ------------ | --------------------------------------------------------- |
+| id           | SERIAL PRIMARY KEY                                        |
+| hospital_id  | INTEGER REFERENCES Hospitals(id) ON DELETE CASCADE        |
+| test_id      | INTEGER REFERENCES Diagnostic_Tests(id) ON DELETE CASCADE |
+| cost         | NUMERIC(10, 2)                                            |
+| availability | VARCHAR(50)                                               |
 
-| Column        | Data Type    | Constraints              |
-| ------------- | ------------ | ------------------------ |
-| id            | SERIAL       | PRIMARY KEY              |
-| email         | VARCHAR(100) | UNIQUE, NOT NULL         |
-| password_hash | VARCHAR(255) | NOT NULL                 |
-| hospital_id   | INTEGER      | REFERENCES Hospitals(id) |
+### hospital_departments
+
+| Column         | Data Type                                          |
+| -------------- | -------------------------------------------------- |
+| id             | SERIAL PRIMARY KEY                                 |
+| hospital_id    | INTEGER REFERENCES Hospitals(id) ON DELETE CASCADE |
+| department_id  | INTEGER REFERENCES Departments(id)                 |
+| head_doctor_id | INTEGER REFERENCES Doctors(id)                     |
+| contact_number | VARCHAR(20)                                        |
+| beds           | SMALLINT                                           |
+| available_days | TEXT[]                                             |
+
+### hospital_admin
+
+| Column        | Data Type                                          |
+| ------------- | -------------------------------------------------- |
+| id            | SERIAL PRIMARY KEY                                 |
+| email         | VARCHAR(100) UNIQUE NOT NULL                       |
+| password_hash | VARCHAR(255) NOT NULL                              |
+| hospital_id   | INTEGER REFERENCES Hospitals(id) ON DELETE CASCADE |
