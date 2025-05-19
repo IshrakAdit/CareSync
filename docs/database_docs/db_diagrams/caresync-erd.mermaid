@@ -1,0 +1,133 @@
+erDiagram
+    users ||--o| user_Locations : has
+    users ||--o{ ratings : gives
+    
+    hospitals ||--o| hospital_Locations : has
+    hospitals ||--o{ ratings : receives
+    hospitals ||--o{ doctor_Hospital : employs
+    hospitals ||--o{ hospital_diagnostic_tests : offers
+    hospitals ||--o{ hospital_departments : contains
+    hospitals ||--o{ hospital_admin : managed_by
+    
+    doctors ||--o| doctor_Locations : has
+    doctors ||--o{ doctor_Hospital : works_at
+    doctors ||--o{ hospital_departments : heads
+    doctors }|--|| departments : belongs_to
+    
+    departments ||--o{ hospital_departments : available_in
+    
+    diagnostic_Tests ||--o{ hospital_diagnostic_tests : provided_as
+    
+    users {
+        int id PK
+        string name
+        string email
+        string password_hash
+        int location_id FK
+    }
+    
+    user_Locations {
+        int id PK
+        int user_id FK
+        string address
+        string thana
+        string po
+        string city
+        string postal_code
+    }
+    
+    ratings {
+        int id PK
+        int user_id FK
+        int hospital_id FK
+        int rating
+        string review_text
+        datetime created_at
+        datetime updated_at
+    }
+    
+    hospitals {
+        int id PK
+        string name
+        string phone_number
+        string website
+        int location_id FK
+        array types
+        int icus
+    }
+    
+    hospital_Locations {
+        int id PK
+        int hospital_id FK
+        string address
+        string thana
+        string po
+        string city
+        string postal_code
+    }
+    
+    hospital_admin {
+        int id PK
+        string email
+        string password_hash
+        int hospital_id FK
+    }
+    
+    departments {
+        int id PK
+        string name
+        string description
+    }
+    
+    doctors {
+        int id PK
+        string name
+        array specialties
+        string phone_number
+        string email
+        int location_id FK
+        int department_id FK
+    }
+    
+    doctor_Locations {
+        int id PK
+        int doctor_id FK
+        string address
+        string thana
+        string po
+        string city
+        string postal_code
+    }
+    
+    doctor_Hospital {
+        int id PK
+        int doctor_id FK
+        int hospital_id FK
+        array appointment_times
+        array weekly_schedule
+        double appointment_fee
+    }
+    
+    diagnostic_Tests {
+        int id PK
+        string name
+        string description
+    }
+    
+    hospital_diagnostic_tests {
+        int id PK
+        int hospital_id FK
+        int test_id FK
+        double cost
+        string availability
+    }
+    
+    hospital_departments {
+        int id PK
+        int hospital_id FK
+        int department_id FK
+        int head_doctor_id FK
+        string contact_number
+        int beds
+        array available_days
+    }
