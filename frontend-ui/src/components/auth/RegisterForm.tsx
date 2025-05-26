@@ -52,7 +52,7 @@ const RegisterForm: React.FC = () => {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Create Account</CardTitle>
-          <CardDescription>Join HealthFinder to find the best healthcare</CardDescription>
+          <CardDescription>Join CareSync to find the best healthcare</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

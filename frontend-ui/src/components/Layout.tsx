@@ -25,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2">
               <Hospital className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">HealthFinder</span>
+              <span className="text-xl font-bold text-gray-900">CareSync</span>
             </Link>
 
             <nav className="hidden md:flex space-x-8">

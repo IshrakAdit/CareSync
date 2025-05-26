@@ -38,7 +38,7 @@ const LoginForm: React.FC = () => {
         login(response.token, userData);
         toast({
           title: "Login successful!",
-          description: "Welcome back to HealthFinder.",
+          description: "Welcome back to CareSync.",
         });
         navigate('/hospitals');
       }
@@ -65,7 +65,7 @@ const LoginForm: React.FC = () => {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Login</CardTitle>
-          <CardDescription>Welcome back to HealthFinder</CardDescription>
+          <CardDescription>Welcome back to CareSync</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
