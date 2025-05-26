@@ -6,13 +6,18 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiClient } from '@/lib/api';
 
 const RegisterForm: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    location: '',
+    address: '',
+    thana: '',
+    po: '',
+    city: '',
+    postalCode: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -23,8 +28,28 @@ const RegisterForm: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // First, register with Firebase
       const result = await signUp(formData.email, formData.password);
       if (result.user) {
+        // Get the access token
+        const accessToken = await result.user.getIdToken();
+        
+        // Register with backend
+        await apiClient.registerUser({
+          userId: result.user.uid,
+          accessToken,
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          fullAddress: {
+            address: formData.address,
+            thana: formData.thana,
+            po: formData.po,
+            city: formData.city,
+            postalCode: formData.postalCode,
+          },
+        });
+
         toast({
           title: "Registration successful!",
           description: "You can now log in to your account.",
@@ -101,13 +126,61 @@ const RegisterForm: React.FC = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <Label htmlFor="address">Street Address</Label>
               <Input
-                id="location"
-                name="location"
+                id="address"
+                name="address"
                 type="text"
                 required
-                value={formData.location}
+                value={formData.address}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="thana">Thana</Label>
+              <Input
+                id="thana"
+                name="thana"
+                type="text"
+                required
+                value={formData.thana}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="po">Post Office</Label>
+              <Input
+                id="po"
+                name="po"
+                type="text"
+                required
+                value={formData.po}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="city">City</Label>
+              <Input
+                id="city"
+                name="city"
+                type="text"
+                required
+                value={formData.city}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="postalCode">Postal Code</Label>
+              <Input
+                id="postalCode"
+                name="postalCode"
+                type="text"
+                required
+                value={formData.postalCode}
                 onChange={handleChange}
               />
             </div>

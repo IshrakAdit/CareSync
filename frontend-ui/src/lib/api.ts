@@ -13,6 +13,23 @@ interface ApiResponse<T = any> {
   };
 }
 
+interface FullAddress {
+  address: string;
+  thana: string;
+  po: string;
+  city: string;
+  postalCode: string;
+}
+
+interface UserRegistration {
+  userId: string;
+  accessToken: string;
+  name: string;
+  email: string;
+  password: string;
+  fullAddress: FullAddress;
+}
+
 interface Hospital {
   id: number;
   name: string;
@@ -270,6 +287,15 @@ class ApiClient {
   async updateDepartmentHead(hospitalId: string, departmentId: string, data: { head_doctor_id: number }) {
     return this.request(`/hospital-admin/hospitals/${hospitalId}/departments/${departmentId}/head`, {
       method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async registerUser(data: UserRegistration) {
+    console.log("registerUser");
+    console.log(data);
+    return this.request<{ success: boolean; message: string }>('/user/v1/register', {
+      method: 'POST',
       body: JSON.stringify(data),
     });
   }
