@@ -1,0 +1,314 @@
+openapi: 3.0.3
+info:
+  title: Hospital Booking DB Schema
+  version: 1.0.0
+
+paths: {}
+
+components:
+  schemas:
+    # ---------- USER-SIDE TABLES ----------
+    users:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password_hash:
+          type: string
+        location_id:
+          type: integer
+        location:
+          $ref: "#/components/schemas/user_Locations"
+        ratings:
+          type: array
+          items:
+            $ref: "#/components/schemas/ratings"
+
+    user_Locations:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        address:
+          type: string
+        thana:
+          type: string
+        po:
+          type: string
+        city:
+          type: string
+        postal_code:
+          type: string
+        user:
+          $ref: "#/components/schemas/users"
+
+    ratings:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        hospital_id:
+          type: integer
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        review_text:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        user:
+          $ref: "#/components/schemas/users"
+        hospital:
+          $ref: "#/components/schemas/hospitals"
+
+    # ---------- HOSPITAL-SIDE TABLES ----------
+    hospitals:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone_number:
+          type: string
+        website:
+          type: string
+        location_id:
+          type: integer
+        types:
+          type: array
+          items:
+            type: string
+            enum: [public, private, specialized, clinic, other]
+        icus:
+          type: integer
+        location:
+          $ref: "#/components/schemas/hospital_Locations"
+        ratings:
+          type: array
+          items:
+            $ref: "#/components/schemas/ratings"
+        doctor_links:
+          type: array
+          items:
+            $ref: "#/components/schemas/doctor_Hospital"
+        diagnostics:
+          type: array
+          items:
+            $ref: "#/components/schemas/hospital_diagnostic_tests"
+        departments:
+          type: array
+          items:
+            $ref: "#/components/schemas/hospital_departments"
+        admins:
+          type: array
+          items:
+            $ref: "#/components/schemas/hospital_admin"
+
+    hospital_Locations:
+      type: object
+      properties:
+        id:
+          type: integer
+        hospital_id:
+          type: integer
+        address:
+          type: string
+        thana:
+          type: string
+        po:
+          type: string
+        city:
+          type: string
+        postal_code:
+          type: string
+        hospital:
+          $ref: "#/components/schemas/hospitals"
+
+    hospital_admin:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        password_hash:
+          type: string
+        hospital_id:
+          type: integer
+        hospital:
+          $ref: "#/components/schemas/hospitals"
+
+    # ---------- DOCTOR / DEPT ----------
+    departments:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        doctors:
+          type: array
+          items:
+            $ref: "#/components/schemas/doctors"
+        hospital_links:
+          type: array
+          items:
+            $ref: "#/components/schemas/hospital_departments"
+
+    doctors:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        specialties:
+          type: array
+          items:
+            type: string
+        phone_number:
+          type: string
+        email:
+          type: string
+          format: email
+        location_id:
+          type: integer
+        department_id:
+          type: integer
+        location:
+          $ref: "#/components/schemas/doctor_Locations"
+        department:
+          $ref: "#/components/schemas/departments"
+        doctor_links:
+          type: array
+          items:
+            $ref: "#/components/schemas/doctor_Hospital"
+        head_of:
+          type: array
+          items:
+            $ref: "#/components/schemas/hospital_departments"
+
+    doctor_Locations:
+      type: object
+      properties:
+        id:
+          type: integer
+        doctor_id:
+          type: integer
+        address:
+          type: string
+        thana:
+          type: string
+        po:
+          type: string
+        city:
+          type: string
+        postal_code:
+          type: string
+        doctor:
+          $ref: "#/components/schemas/doctors"
+
+    doctor_Hospital:
+      type: object
+      properties:
+        id:
+          type: integer
+        doctor_id:
+          type: integer
+        hospital_id:
+          type: integer
+        appointment_times:
+          type: array
+          items:
+            type: string
+            format: date-time
+        weekly_schedule:
+          type: array
+          items:
+            type: string
+        appointment_fee:
+          type: number
+          format: double
+        doctor:
+          $ref: "#/components/schemas/doctors"
+        hospital:
+          $ref: "#/components/schemas/hospitals"
+
+    # ---------- DIAGNOSTICS ----------
+    diagnostic_Tests:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        available_at:
+          type: array
+          items:
+            $ref: "#/components/schemas/hospital_diagnostic_tests"
+
+    hospital_diagnostic_tests:
+      type: object
+      properties:
+        id:
+          type: integer
+        hospital_id:
+          type: integer
+        test_id:
+          type: integer
+        cost:
+          type: number
+          format: double
+        availability:
+          type: string
+        hospital:
+          $ref: "#/components/schemas/hospitals"
+        test:
+          $ref: "#/components/schemas/diagnostic_Tests"
+
+    # ---------- HOSPITAL-DEPARTMENT LINK ----------
+    hospital_departments:
+      type: object
+      properties:
+        id:
+          type: integer
+        hospital_id:
+          type: integer
+        department_id:
+          type: integer
+        head_doctor_id:
+          type: integer
+        contact_number:
+          type: string
+        beds:
+          type: integer
+        available_days:
+          type: array
+          items:
+            type: string
+        hospital:
+          $ref: "#/components/schemas/hospitals"
+        department:
+          $ref: "#/components/schemas/departments"
+        head_doctor:
+          $ref: "#/components/schemas/doctors"
