@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/hooks/use-toast';
-import { dummyApiClient as apiClient } from '@/lib/api_dummy';
+import { apiClient } from '@/lib/api';
 import { Hospital, User, TestTube, Building2 } from 'lucide-react';
 import { Hospital as HospitalType, Doctor, Department, DiagnosticTest } from '@/types';
 

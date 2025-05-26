@@ -4,7 +4,7 @@ import Layout from '@/components/Layout';
 import HospitalSearch from '@/components/hospitals/HospitalSearch';
 import HospitalCard from '@/components/hospitals/HospitalCard';
 import { Hospital, SearchFilters } from '@/types';
-import { dummyApiClient as apiClient } from '@/lib/api_dummy';
+import { apiClient } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
 
 const HospitalsPage: React.FC = () => {

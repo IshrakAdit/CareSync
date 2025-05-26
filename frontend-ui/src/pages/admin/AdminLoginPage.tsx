@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
-import { dummyApiClient as apiClient } from '@/lib/api_dummy';
+import { apiClient } from '@/lib/api';
 import { Hospital } from 'lucide-react';
 
 const AdminLoginPage: React.FC = () => {

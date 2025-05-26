@@ -28,29 +28,24 @@ const LoginForm: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await apiClient.login(formData);
-      if (response.token) {
-        apiClient.setToken(response.token);
-
-        // Mock user data for now - in real app, this would come from API
-        const userData = {
-          id: "1",
-          name: "John Doe",
-          email: formData.email,
-          location: "Dhaka",
-        };
-
-        login(response.token, userData);
+      const result = await login(formData.email, formData.password);
+      if (result.user) {
         toast({
           title: "Login successful!",
           description: "Welcome back to CareSync.",
         });
         navigate("/hospitals");
+      } else {
+        toast({
+          title: "Login failed",
+          description: result.error || "Invalid email or password.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
         title: "Login failed",
-        description: "Invalid email or password.",
+        description: "An unexpected error occurred.",
         variant: "destructive",
       });
     } finally {

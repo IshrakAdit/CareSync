@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import { dummyApiClient as apiClient } from '@/lib/api_dummy';
+import { useAuth } from '@/contexts/AuthContext';
 
 const RegisterForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -17,22 +16,31 @@ const RegisterForm: React.FC = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { signUp } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      await apiClient.register(formData);
-      toast({
-        title: "Registration successful!",
-        description: "Please check your email for verification code.",
-      });
-      navigate('/verify-otp', { state: { email: formData.email } });
+      const result = await signUp(formData.email, formData.password);
+      if (result.user) {
+        toast({
+          title: "Registration successful!",
+          description: "You can now log in to your account.",
+        });
+        navigate('/login');
+      } else {
+        toast({
+          title: "Registration failed",
+          description: result.error || "Please try again.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       toast({
         title: "Registration failed",
-        description: "Please try again.",
+        description: "An unexpected error occurred.",
         variant: "destructive",
       });
     } finally {

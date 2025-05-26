@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar, Clock, Hospital } from 'lucide-react';
 import { Appointment } from '@/types';
-import { dummyApiClient as apiClient } from '@/lib/api_dummy';
+import { apiClient } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import {

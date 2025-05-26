@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Hospital, Doctor, Department, DiagnosticTest, Rating } from '@/types';
-import { dummyApiClient as apiClient } from '@/lib/api_dummy';
+import { apiClient } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
 import { MapPin, Phone, Star, Globe, User, Calendar } from 'lucide-react';
 import RatingForm from '@/components/ratings/RatingForm';
