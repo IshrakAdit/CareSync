@@ -7,6 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiClient } from '@/lib/api';
+import { Link } from 'react-router-dom';
+import { MoveLeft } from 'lucide-react';
+import { deleteUser } from 'firebase/auth';
 
 const RegisterForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -31,30 +34,45 @@ const RegisterForm: React.FC = () => {
       // First, register with Firebase
       const result = await signUp(formData.email, formData.password);
       if (result.user) {
-        // Get the access token
-        const accessToken = await result.user.getIdToken();
-        
-        // Register with backend
-        await apiClient.registerUser({
-          userId: result.user.uid,
-          accessToken,
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          fullAddress: {
-            address: formData.address,
-            thana: formData.thana,
-            po: formData.po,
-            city: formData.city,
-            postalCode: formData.postalCode,
-          },
-        });
+        try {
+          // Get the access token
+          const accessToken = await result.user.getIdToken();
+          
+          // Register with backend
+          await apiClient.registerUser({
+            userId: result.user.uid,
+            accessToken,
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+            fullAddress: {
+              address: formData.address,
+              thana: formData.thana,
+              po: formData.po,
+              city: formData.city,
+              postalCode: formData.postalCode,
+            },
+          });
 
-        toast({
-          title: "Registration successful!",
-          description: "You can now log in to your account.",
-        });
-        navigate('/login');
+          toast({
+            title: "Registration successful!",
+            description: "You can now log in to your account.",
+          });
+          navigate('/login');
+        } catch (error) {
+          // If backend registration fails, delete the Firebase user
+          try {
+            await deleteUser(result.user);
+          } catch (deleteError) {
+            console.error('Error deleting Firebase user:', deleteError);
+          }
+          
+          toast({
+            title: "Registration failed",
+            description: "Failed to complete registration. Please try again.",
+            variant: "destructive",
+          });
+        }
       } else {
         toast({
           title: "Registration failed",
@@ -102,7 +120,7 @@ const RegisterForm: React.FC = () => {
                   onChange={handleChange}
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -129,7 +147,7 @@ const RegisterForm: React.FC = () => {
                   onChange={handleChange}
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="address">Street Address</Label>
                 <Input
@@ -196,10 +214,15 @@ const RegisterForm: React.FC = () => {
                 />
               </div>
             </div>
-            
-            <Button type="submit" className="w-full mt-6" disabled={isLoading}>
-              {isLoading ? 'Creating Account...' : 'Create Account'}
-            </Button>
+            <div className='flex justify-between align-middle'>
+              <Link to="/login" className=' rounded-md text-black px-4 py-2 mt-6 flex gap-2'>
+                <MoveLeft size={24} className='translate-y-[3px]' />
+                Back to Login
+              </Link>
+              <Button type="submit" className="w-fit mt-6" disabled={isLoading}>
+                {isLoading ? 'Creating Account...' : 'Create Account'}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
