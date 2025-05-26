@@ -81,111 +81,123 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <Card className="w-full max-w-4xl">
         <CardHeader>
           <CardTitle>Create Account</CardTitle>
           <CardDescription>Join CareSync to find the best healthcare</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                required
-                value={formData.name}
-                onChange={handleChange}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="address">Street Address</Label>
-              <Input
-                id="address"
-                name="address"
-                type="text"
-                required
-                value={formData.address}
-                onChange={handleChange}
-              />
+            {/* First Row */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="thana">Thana</Label>
-              <Input
-                id="thana"
-                name="thana"
-                type="text"
-                required
-                value={formData.thana}
-                onChange={handleChange}
-              />
+            {/* Second Row */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="address">Street Address</Label>
+                <Input
+                  id="address"
+                  name="address"
+                  type="text"
+                  required
+                  value={formData.address}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="po">Post Office</Label>
-              <Input
-                id="po"
-                name="po"
-                type="text"
-                required
-                value={formData.po}
-                onChange={handleChange}
-              />
+            {/* Third Row */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="thana">Thana</Label>
+                <Input
+                  id="thana"
+                  name="thana"
+                  type="text"
+                  required
+                  value={formData.thana}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="po">Post Office</Label>
+                <Input
+                  id="po"
+                  name="po"
+                  type="text"
+                  required
+                  value={formData.po}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="city">City</Label>
+                <Input
+                  id="city"
+                  name="city"
+                  type="text"
+                  required
+                  value={formData.city}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="city">City</Label>
-              <Input
-                id="city"
-                name="city"
-                type="text"
-                required
-                value={formData.city}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="postalCode">Postal Code</Label>
-              <Input
-                id="postalCode"
-                name="postalCode"
-                type="text"
-                required
-                value={formData.postalCode}
-                onChange={handleChange}
-              />
+            {/* Fourth Row */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="postalCode">Postal Code</Label>
+                <Input
+                  id="postalCode"
+                  name="postalCode"
+                  type="text"
+                  required
+                  value={formData.postalCode}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
             
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full mt-6" disabled={isLoading}>
               {isLoading ? 'Creating Account...' : 'Create Account'}
             </Button>
           </form>
