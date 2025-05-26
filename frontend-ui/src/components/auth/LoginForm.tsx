@@ -1,18 +1,23 @@
-
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
-import { dummyApiClient as apiClient } from '@/lib/api_dummy';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { dummyApiClient as apiClient } from "@/lib/api_dummy";
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -26,21 +31,21 @@ const LoginForm: React.FC = () => {
       const response = await apiClient.login(formData);
       if (response.token) {
         apiClient.setToken(response.token);
-        
+
         // Mock user data for now - in real app, this would come from API
         const userData = {
-          id: '1',
-          name: 'John Doe',
+          id: "1",
+          name: "John Doe",
           email: formData.email,
-          location: 'Dhaka',
+          location: "Dhaka",
         };
-        
+
         login(response.token, userData);
         toast({
           title: "Login successful!",
-          description: "Welcome back to HealthFinder.",
+          description: "Welcome back to CareSync.",
         });
-        navigate('/hospitals');
+        navigate("/hospitals");
       }
     } catch (error) {
       toast({
@@ -65,7 +70,7 @@ const LoginForm: React.FC = () => {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Login</CardTitle>
-          <CardDescription>Welcome back to HealthFinder</CardDescription>
+          <CardDescription>Welcome back to CareSync</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -80,7 +85,7 @@ const LoginForm: React.FC = () => {
                 onChange={handleChange}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
@@ -92,13 +97,13 @@ const LoginForm: React.FC = () => {
                 onChange={handleChange}
               />
             </div>
-            
+
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Logging in...' : 'Login'}
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
-            
+
             <div className="text-center text-sm">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <Link to="/register" className="text-blue-600 hover:underline">
                 Register here
               </Link>

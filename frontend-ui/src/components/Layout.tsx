@@ -1,9 +1,8 @@
-
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/AuthContext';
-import { Hospital, User, Calendar } from 'lucide-react';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { Hospital, User, Calendar } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,7 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -25,15 +24,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2">
               <Hospital className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">HealthFinder</span>
+              <span className="text-xl font-bold text-gray-900">CareSync</span>
             </Link>
 
             <nav className="hidden md:flex space-x-8">
-              <Link to="/hospitals" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link
+                to="/hospitals"
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+              >
                 Find Hospitals
               </Link>
               {isAuthenticated && (
-                <Link to="/appointments" className="text-gray-700 hover:text-blue-600 transition-colors">
+                <Link
+                  to="/appointments"
+                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                >
                   My Appointments
                 </Link>
               )}
