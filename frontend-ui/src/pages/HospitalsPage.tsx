@@ -1,11 +1,10 @@
-
-import React, { useState, useEffect } from 'react';
-import Layout from '@/components/Layout';
-import HospitalSearch from '@/components/hospitals/HospitalSearch';
-import HospitalCard from '@/components/hospitals/HospitalCard';
-import { Hospital, SearchFilters } from '@/types';
-import { apiClient } from '@/lib/api';
-import { toast } from '@/hooks/use-toast';
+import React, { useState, useEffect } from "react";
+import Layout from "@/components/Layout";
+import HospitalSearch from "@/components/hospitals/HospitalSearch";
+import HospitalCard from "@/components/hospitals/HospitalCard";
+import { Hospital, SearchFilters } from "@/types";
+import { apiClient } from "@/lib/api";
+import { toast } from "@/hooks/use-toast";
 
 const HospitalsPage: React.FC = () => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
@@ -13,39 +12,24 @@ const HospitalsPage: React.FC = () => {
 
   // Mock data for demonstration
   useEffect(() => {
-    const mockHospitals: Hospital[] = [
-      {
-        id: 1,
-        name: "Dhaka Medical College Hospital",
-        address: "Secretariat Road, Dhaka",
-        phone_number: "+88-02-8626812",
-        rating: 4.5,
-        location: "Dhaka",
-        type: "Public",
-        icus: 50
-      },
-      {
-        id: 2,
-        name: "Square Hospital",
-        address: "18/F, Bir Uttam Qazi Nuruzzaman Sarak",
-        phone_number: "+88-02-8159457",
-        rating: 4.8,
-        location: "Dhaka",
-        type: "Private",
-        icus: 30
-      },
-      {
-        id: 3,
-        name: "Apollo Hospitals Dhaka",
-        address: "Plot 81, Block E, Bashundhara",
-        phone_number: "+88-02-8401661",
-        rating: 4.7,
-        location: "Dhaka",
-        type: "Private",
-        icus: 40
-      }
-    ];
-    setHospitals(mockHospitals);
+    const fetchDemoHospitals = async () => {
+      const response = await apiClient.getAllHospitals();
+      console.log(response);
+      const formattedHospitals: Hospital[] =
+        response.data?.map((h) => ({
+          id: h.id,
+          name: h.name,
+          phone_number: h.phoneNumber,
+          address: "",
+          rating: 0,
+          location: h.location || "",
+          type: "Public",
+          icus: h.icus,
+        })) || [];
+      setHospitals(formattedHospitals);
+    };
+
+    fetchDemoHospitals();
   }, []);
 
   const handleSearch = async (filters: SearchFilters) => {
@@ -54,9 +38,9 @@ const HospitalsPage: React.FC = () => {
       // In a real app, this would call the API
       // const response = await apiClient.searchHospitals(filters);
       // setHospitals(response.data);
-      
+
       // For now, we'll simulate filtering the mock data
-      console.log('Searching with filters:', filters);
+      console.log("Searching with filters:", filters);
       toast({
         title: "Search completed",
         description: `Found ${hospitals.length} hospitals`,
@@ -76,8 +60,12 @@ const HospitalsPage: React.FC = () => {
     <Layout>
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Find Hospitals</h1>
-          <p className="text-gray-600">Discover the best healthcare facilities near you</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Find Hospitals
+          </h1>
+          <p className="text-gray-600">
+            Discover the best healthcare facilities near you
+          </p>
         </div>
 
         <HospitalSearch onSearch={handleSearch} isLoading={isLoading} />
@@ -90,7 +78,9 @@ const HospitalsPage: React.FC = () => {
 
         {hospitals.length === 0 && !isLoading && (
           <div className="text-center py-12">
-            <p className="text-gray-500">No hospitals found. Try adjusting your search criteria.</p>
+            <p className="text-gray-500">
+              No hospitals found. Try adjusting your search criteria.
+            </p>
           </div>
         )}
       </div>
