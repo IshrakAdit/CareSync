@@ -68,25 +68,26 @@ The system supports a normalized relational schema for managing users, hospital 
 
 ---
 
-## Installation & Deployment
+## How to Run
 
 ### Prerequisites
 
 - Docker
+- env files
 
 ### Steps
 
-1. **Clone the repository**:
+1. **Clone the repository recursively**:
 
    ```bash
-   git clone https://github.com/Ishrak-Adit07/CareSync.git
+   git clone --recurse-submodules https://github.com/Ishrak-Adit07/CareSync.git
    cd CareSync
    ```
 
 2. **Start Development Environment**:
 
    ```bash
-   docker-compose up --build
+   docker-compose up --build -d
    ```
 
 ---
