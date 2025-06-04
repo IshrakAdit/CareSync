@@ -31,9 +31,9 @@ CareSync is built in collaboration with [**Helping Hand For Needy**](https://hhf
 ### Microservices
 
 - **User Service** – Handles user registration, authentication, and profiles
-- **Hospital Service** – Manages general hospital information
-- **Doctor Service** – Manages doctor profiles, specialties, and hospital mappings
-- **Review Service** – Stores and retrieves user reviews and ratings
+- **Data Service** – Manages and provides general hospital and doctor information
+- **Location Service** – Manages and provides location information of users, hospitals or doctors
+- **Feedback Service** – Stores and retrieves user reviews and ratings
 - **Charity Service** – Connects users to our collaborator organization
 
 ---
@@ -80,7 +80,7 @@ The system supports a normalized relational schema for managing users, hospital 
 1. **Clone the repository recursively**:
 
    ```bash
-   git clone --recurse-submodules https://github.com/Ishrak-Adit07/CareSync.git
+   git clone --recurse-submodules https://github.com/IshrakAdit/CareSync.git
    cd CareSync
    ```
 
@@ -96,13 +96,15 @@ The system supports a normalized relational schema for managing users, hospital 
 
 ```
 caresync/
-├── client/                    # React frontend
+├── clients/                   # React frontend
+│   ├── web-service/
 ├── services/                  # Spring Boot microservice
-│   ├── user-service/
-│   ├── hospital-service/
-│   ├── doctor-service/
-│   ├── review-service/
+│   ├── auth-service/
+│   ├── data-service/
+│   ├── location-service/
+│   ├── feedback-service/
 │   ├── charity-service/
+│   ├── init-db/
 |   └── docker-compose.yml
 ├── k8s/                       # Kubernetes manifests
 └── docs/
