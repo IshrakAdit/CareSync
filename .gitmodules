@@ -7,3 +7,6 @@
 [submodule "services/data"]
 	path = services/data
 	url = https://github.com/IshrakAdit/caresync-data-service.git
+[submodule "clients/web-app"]
+	path = clients/web-app
+	url = https://github.com/hasnainadil/caresync-web-service.git
