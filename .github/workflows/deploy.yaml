@@ -1,0 +1,31 @@
+name: Deploy to GCP VM
+
+on:
+  # push:
+  #   branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and Deploy to GCP VM
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.GCP_VM_HOST }}
+          username: ${{ secrets.GCP_VM_USER }}
+          key: ${{ secrets.GCP_VM_SSH_KEY }}
+          script: |
+            cd /project/CareSync
+
+            echo "Pulling latest changes for services..."
+            cd services/auth && git pull origin main && cd ../..
+            cd services/data && git pull origin main && cd ../..
+            cd services/location && git pull origin main && cd ../..
+            cd clients/web-app && git pull origin main && cd ../..
+
+            echo "Rebuilding and restarting Docker containers..."
+            docker compose down -v
+            docker compose build --no-cache
+            docker compose up -d
