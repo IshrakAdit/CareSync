@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.GCP_VM_SSH_KEY }}
           passphrase: ${{ secrets.GCP_VM_SSH_PASSPHRASE }}
           script: |
-            cd /project/CareSync
+            cd project/CareSync
             ls
 
             echo "Pulling latest changes for services..."
