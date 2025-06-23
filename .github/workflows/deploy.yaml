@@ -1,7 +1,5 @@
 name: Deploy to GCP VM
 
-# Test Deployment Workflow
-
 on:
   push:
     branches: [main]
@@ -20,8 +18,9 @@ jobs:
           key: ${{ secrets.GCP_VM_SSH_KEY }}
           passphrase: ${{ secrets.GCP_VM_SSH_PASSPHRASE }}
           script: |
+            set -e
+
             cd project/CareSync
-            ls
 
             echo "Pulling latest changes for services..."
             cd services/auth && git pull origin main && cd ../..
@@ -31,5 +30,6 @@ jobs:
 
             echo "Rebuilding and restarting Docker containers..."
             docker compose down -v
+            docker system prune -a --volumes
             docker compose build --no-cache
             docker compose up -d
