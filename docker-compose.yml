@@ -10,6 +10,8 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./services/init-db:/docker-entrypoint-initdb.d
+    networks:
+      - app-net
 
   auth-service:
     build:
@@ -22,6 +24,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
     restart: unless-stopped
+    networks:
+      - app-net
 
   data-service:
     build:
@@ -34,6 +38,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
     restart: unless-stopped
+    networks:
+      - app-net
 
   location-service:
     build:
@@ -46,6 +52,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
     restart: unless-stopped
+    networks:
+      - app-net
 
   web-service:
     build:
@@ -57,10 +65,17 @@ services:
       - data-service
       - location-service
     environment:
-      VITE_AUTH_URL: http://localhost:8081
-      VITE_DATA_URL: http://localhost:8082
-      VITE_LOCATION_URL: http://localhost:8083
+      # Use Docker service names instead of localhost (only valid *inside* container)
+      VITE_AUTH_URL: http://auth-service:8081
+      VITE_DATA_URL: http://data-service:8082
+      VITE_LOCATION_URL: http://location-service:8083
     restart: unless-stopped
+    networks:
+      - app-net
 
 volumes:
   pgdata:
+
+networks:
+  app-net:
+    driver: bridge
