@@ -47,5 +47,20 @@ services:
       FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
     restart: unless-stopped
 
+  web-service:
+    build:
+      context: ./clients/web-app/frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - auth-service
+      - data-service
+      - location-service
+    environment:
+      VITE_AUTH_URL: http://localhost:8081
+      VITE_DATA_URL: http://localhost:8082
+      VITE_LOCATION_URL: http://localhost:8083
+    restart: unless-stopped
+
 volumes:
   pgdata:
