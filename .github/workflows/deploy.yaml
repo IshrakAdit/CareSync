@@ -28,8 +28,10 @@ jobs:
             cd services/location && git pull origin main && cd ../..
             cd clients/web-app && git pull origin main && cd ../..
 
+            git pull origin main
+
             echo "Rebuilding and restarting Docker containers..."
             docker compose down -v
-            docker system prune -a --volumes
+            docker system prune -a --volumes -f
             docker compose build --no-cache
             docker compose up -d
