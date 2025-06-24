@@ -8,27 +8,27 @@ CareSync is a smart healthcare support platform that streamlines interactions be
 
 ---
 
-## Development Team
-
-- [**Ishrak Adit**](https://github.com/Ishrak-Adit07)
-- [**H M Shadman Tabib**](https://github.com/shadmantabib)
-- [**Hasnain Adil**](https://github.com/hasnainadil)
-
----
-
-## Collaborators
-
-CareSync is built in collaboration with [**Helping Hand For Needy**](https://hhfn.org.bd), a non-profit organization dedicated to supporting individuals in hospitals who struggle to afford treatment.
-
----
-
-## Features
+## Core Features
 
 - Search hospitals by need, cost, and location
 - Discover doctors by specialty, condition and cost
 - Find doctor schedules' across hospitals
 - Submit and view hospital reviews and ratings
 - Access charity and support options
+
+---
+
+## Development Team
+
+- Backend & DevOps: [**Ishrak Adit**](https://github.com/Ishrak-Adit07)
+- Backend & AI: [**H M Shadman Tabib**](https://github.com/shadmantabib)
+- Frontend: [**Hasnain Adil**](https://github.com/hasnainadil)
+
+---
+
+## Collaborators
+
+CareSync is built in collaboration with [**Helping Hand For Needy**](https://hhfn.org.bd), a non-profit organization dedicated to supporting individuals in hospitals who struggle to afford treatment.
 
 ---
 
