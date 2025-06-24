@@ -8,6 +8,14 @@ CareSync is a smart healthcare support platform that streamlines interactions be
 
 ---
 
+## Development Team
+
+- [**Ishrak Adit**](https://github.com/Ishrak-Adit07)
+- [**H M Shadman Tabib**](https://github.com/shadmantabib)
+- [**Hasnain Adil**](https://github.com/hasnainadil)
+
+---
+
 ## Collaborators
 
 CareSync is built in collaboration with [**Helping Hand For Needy**](https://hhfn.org.bd), a non-profit organization dedicated to supporting individuals in hospitals who struggle to afford treatment.
@@ -30,7 +38,7 @@ CareSync is built in collaboration with [**Helping Hand For Needy**](https://hhf
 
 ### Microservices
 
-- **User Service** – Handles user registration, authentication, and profiles
+- **Auth Service** – Handles registration, authentication, and profile information
 - **Data Service** – Manages and provides general hospital and doctor information
 - **Location Service** – Manages and provides location information of users, hospitals or doctors
 - **Feedback Service** – Stores and retrieves user reviews and ratings
@@ -56,9 +64,8 @@ CareSync is built in collaboration with [**Helping Hand For Needy**](https://hhf
 ### DevOps & Cloud
 
 - Docker Compose (Local Development)
-- Kubernetes (Production Deployment)
-- Helm (K8s management)
-- Azure (Cloud Hosting)
+- Remote VM (Production Deployment)
+- Google Cloud (Cloud Hosting)
 
 ---
 
@@ -96,27 +103,21 @@ The system supports a normalized relational schema for managing users, hospital 
 
 ```
 caresync/
-├── clients/                   # React frontend
-│   ├── web-service/
+├── .github/workflows
+│   ├── deploy.yaml       
+├── clients/                   # Frontends
+│   ├── web-app/               # ReactJS Web App
 ├── services/                  # Spring Boot microservice
 │   ├── auth-service/
 │   ├── data-service/
 │   ├── location-service/
 │   ├── feedback-service/
 │   ├── charity-service/
-│   ├── init-db/
-|   └── docker-compose.yml
-├── k8s/                       # Kubernetes manifests
+|   └── init-db/
+├── docker-compose.yaml
+├── docker-compose.prod.yaml
 └── docs/
 ```
-
----
-
-## Contributors
-
-- [**H M Shadman Tabib**](https://github.com/shadmantabib)
-- [**Mohammad Ishrak Adit**](https://github.com/Ishrak-Adit07)
-- [**Hasnain Adil**](https://github.com/hasnainadil)
 
 ---
 
