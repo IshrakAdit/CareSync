@@ -20,7 +20,7 @@ CareSync is a smart healthcare support platform that streamlines interactions be
 
 ## Development Team
 
-- [**Ishrak Adit**](https://github.com/Ishrak-Adit07)
+- [**Ishrak Adit**](https://github.com/IshrakAdit)
 - [**H M Shadman Tabib**](https://github.com/shadmantabib)
 - [**Hasnain Adil**](https://github.com/hasnainadil)
 
