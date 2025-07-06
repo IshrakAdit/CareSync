@@ -31,7 +31,7 @@ jobs:
             git pull origin main
 
             echo "Rebuilding and restarting Docker containers..."
-            docker compose -f docker-compose.yaml -f docker-compose.prod.yaml down
+            docker compose -f docker-compose.yaml -f docker-compose.prod.yaml down -v
             docker system prune -a --volumes -f
             docker compose -f docker-compose.yaml -f docker-compose.prod.yaml build --no-cache
             docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
