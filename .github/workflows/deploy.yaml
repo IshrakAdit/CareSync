@@ -26,6 +26,7 @@ jobs:
             cd services/auth && git pull origin main && cd ../..
             cd services/data && git pull origin main && cd ../..
             cd services/location && git pull origin main && cd ../..
+            cd services/feedback && git pull origin main && cd ../..
             cd clients/web-app && git pull origin main && cd ../..
 
             git pull origin main
