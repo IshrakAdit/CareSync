@@ -55,19 +55,19 @@ services:
     networks:
       - app-net
 
-    feedback-service:
-      build:
-        context: ./services/feedback/server
-      expose:
-        - "8084"
-      depends_on:
-        - postgres
-      environment:
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
-      restart: unless-stopped
-      networks:
-        - app-net
+  feedback-service:
+    build:
+      context: ./services/feedback/server
+    expose:
+      - "8084"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
+    restart: unless-stopped
+    networks:
+      - app-net
 
   web-service:
     build:
