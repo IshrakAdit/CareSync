@@ -13,5 +13,6 @@ services:
       - auth-service
       - data-service
       - location-service
+      - feedback-service
     networks:
       - app-net
