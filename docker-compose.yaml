@@ -55,6 +55,20 @@ services:
     networks:
       - app-net
 
+    feedback-service:
+      build:
+        context: ./services/feedback/server
+      expose:
+        - "8084"
+      depends_on:
+        - postgres
+      environment:
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
+      restart: unless-stopped
+      networks:
+        - app-net
+
   web-service:
     build:
       context: ./clients/web-app/frontend
@@ -64,10 +78,12 @@ services:
       - auth-service
       - data-service
       - location-service
+      - feedback-service
     environment:
       VITE_AUTH_URL: http://auth-service:8081
       VITE_DATA_URL: http://data-service:8082
       VITE_LOCATION_URL: http://location-service:8083
+      VITE_FEEDBACK_URL: http://feedback-service:8084
     restart: unless-stopped
     networks:
       - app-net
