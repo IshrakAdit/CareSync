@@ -1,9 +1,9 @@
 [submodule "services/auth"]
 	path = services/auth
-	url = git@github.com:Ishrak-Adit07/caresync-auth-service.git
+	url = git@github.com:IshrakAdit/caresync-auth-service.git
 [submodule "services/location"]
 	path = services/location
-	url = git@github.com:Ishrak-Adit07/caresync-location-service.git
+	url = git@github.com:IshrakAdit/caresync-location-service.git
 [submodule "services/data"]
 	path = services/data
 	url = git@github.com:IshrakAdit/caresync-data-service.git
