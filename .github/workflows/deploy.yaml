@@ -22,6 +22,8 @@ jobs:
 
             cd project/CareSync
 
+            git pull origin main
+
             echo "Pulling latest changes for services..."
             cd services/auth && git pull origin main && cd ../..
             cd services/data && git pull origin main && cd ../..
