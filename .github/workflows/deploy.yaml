@@ -22,7 +22,9 @@ jobs:
 
             cd project/CareSync
 
+            echo "Pulling latest changes for main..."
             git pull origin main
+            git submodule update --init --recursive
 
             echo "Pulling latest changes for services..."
             cd services/auth && git pull origin main && cd ../..
@@ -30,8 +32,6 @@ jobs:
             cd services/location && git pull origin main && cd ../..
             cd services/feedback && git pull origin main && cd ../..
             cd clients/web-app && git pull origin main && cd ../..
-
-            git pull origin main
 
             echo "Rebuilding and restarting Docker containers..."
             docker compose -f docker-compose.yaml -f docker-compose.prod.yaml down -v
