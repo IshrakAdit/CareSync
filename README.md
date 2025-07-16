@@ -104,7 +104,7 @@ The system supports a normalized relational schema for managing users, hospital 
 ```
 caresync/
 ├── .github/workflows
-│   ├── deploy.yaml       
+│   ├── deploy.yaml
 ├── clients/                   # Frontends
 │   ├── web-app/               # ReactJS Web App
 ├── services/                  # Spring Boot microservice
@@ -112,7 +112,6 @@ caresync/
 │   ├── data-service/
 │   ├── location-service/
 │   ├── feedback-service/
-│   ├── charity-service/
 |   └── init-db/
 ├── docker-compose.yaml
 ├── docker-compose.prod.yaml
