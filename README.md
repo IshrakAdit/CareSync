@@ -8,6 +8,12 @@ CareSync is a smart healthcare support platform that streamlines interactions be
 
 ---
 
+## Website link
+
+[**CareSync Website**](https://services.caresync.district12.xyz/)
+
+---
+
 ## Core Features
 
 - Search hospitals by need, cost, and location
