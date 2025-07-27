@@ -1,0 +1,117 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./services/init-db:/docker-entrypoint-initdb.d
+    networks:
+      - app-net
+
+  auth-service:
+    build:
+      context: ./services/auth/server
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  data-service:
+    build:
+      context: ./services/data/server
+    ports:
+      - "8082:8082
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  location-service:
+    build:
+      context: ./services/location/server
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  feedback-service:
+    build:
+      context: ./services/feedback/server
+    expose:
+      - "8084:8084"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  chat-service:
+    build:
+      context: ./services/chat
+    expose:
+      - "8085:8085"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      HOSPITAL_SERVICE_URL: ${HOSPITAL_SERVICE_URL}
+      TEST_SERVICE_URL: ${TEST_SERVICE_URL}
+      DOCTOR_SERVICE_URL: ${DOCTOR_SERVICE_URL}
+      FEEDBACK_SERVICE_URL: ${FEEDBACK_SERVICE_URL}
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  web-service:
+    build:
+      context: ./clients/web-app/frontend
+    expose:
+      - "5173:5173"
+    depends_on:
+      - auth-service
+      - data-service
+      - location-service
+      - feedback-service
+      - chat-service
+    environment:
+      VITE_AUTH_URL: http://auth-service:8081
+      VITE_DATA_URL: http://data-service:8082
+      VITE_LOCATION_URL: http://location-service:8083
+      VITE_FEEDBACK_URL: http://feedback-service:8084
+      VITE_CHAT_URL: http://chat-service:8085
+    restart: unless-stopped
+    networks:
+      - app-net
+
+volumes:
+  pgdata:
+
+networks:
+  app-net:
+    driver: bridge
