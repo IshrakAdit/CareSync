@@ -10,6 +10,9 @@
 [submodule "services/feedback"]
 	path = services/feedback
 	url = git@github.com:IshrakAdit/caresync-feedback-service.git
+[submodule "services/chat"]
+	path = services/chat
+	url = git@github.com:hasnainadil/caresync-chat-service.git
 [submodule "clients/web-app"]
 	path = clients/web-app
 	url = git@github.com:hasnainadil/caresync-web-service.git
