@@ -69,6 +69,21 @@ services:
     networks:
       - app-net
 
+  chat-service:
+    build:
+      context: ./services/chat
+    expose:
+      - "8085"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      FIREBASE_CREDENTIAL: ${FIREBASE_CREDENTIAL}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+    restart: unless-stopped
+    networks:
+      - app-net
+
   web-service:
     build:
       context: ./clients/web-app/frontend
@@ -79,6 +94,7 @@ services:
       - data-service
       - location-service
       - feedback-service
+      - chat-service
     environment:
       VITE_AUTH_URL: http://auth-service:8081
       VITE_DATA_URL: http://data-service:8082
