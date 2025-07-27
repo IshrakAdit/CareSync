@@ -31,6 +31,7 @@ jobs:
             cd services/data && git pull origin main && cd ../..
             cd services/location && git pull origin main && cd ../..
             cd services/feedback && git pull origin main && cd ../..
+            cd services/chat && git pull origin main && cd ../..
             cd clients/web-app && git pull origin main && cd ../..
 
             echo "Rebuilding and restarting Docker containers..."
