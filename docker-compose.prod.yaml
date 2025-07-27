@@ -14,5 +14,6 @@ services:
       - data-service
       - location-service
       - feedback-service
+      - chat-service
     networks:
       - app-net
